@@ -12,7 +12,7 @@
         flat
         hide-no-data
         hide-details
-        label="Поиск по магазину"
+        label="Search"
         solo-inverted
         @change="selected"
       />
