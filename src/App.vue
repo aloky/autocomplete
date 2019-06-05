@@ -94,7 +94,7 @@ export default {
           data.forEach(({ show }) => {
             if (!this.items.includes(show.name)) {
               this.items.push(show.name)
-							this.result.push(show)
+              this.result.push(show)
             }
           })
           this.loading = false
