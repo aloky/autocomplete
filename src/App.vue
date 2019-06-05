@@ -19,12 +19,11 @@
     </v-toolbar>
     <v-content>
       <v-flex xs12 sm6 offset-sm3>
-        <v-card v-if="item" flat>
+        <v-card v-if="item">
           <v-img
-            v-if="item.image"
             class="white--text"
-            height="200px"
-            :src="item.image.original"
+            height="300px"
+            :src="item.image && item.image.original || 'https://static.tvmaze.com/images/no-img/no-img-portrait-text.png'"
           >
             <v-container fill-height fluid>
               <v-layout fill-height>
@@ -36,7 +35,7 @@
           </v-img>
           <v-card-title>
             <div>
-              <span class="grey--text">{{ item.status }}</span><br>
+              <v-chip label>{{ item.status }}</v-chip>
               <div v-html="item.summary"></div>
             </div>
           </v-card-title>
@@ -78,22 +77,24 @@ export default {
     }
   },
   watch: {
-    search (val) {
-      val && val !== this.select && this.querySelections(val)
+    search (q) {
+      q && q !== this.select && this.querySelections(q)
     }
   },
   methods: {
     selected () {
       this.item = this.result.find(({ name }) => this.select === name)
     },
-    querySelections (val) {
+    querySelections (q) {
       this.loading = true
-      axios.get(`http://api.tvmaze.com/search/shows?q=${val}`)
+      axios.get('http://api.tvmaze.com/search/shows', {
+        params: { q }
+      })
         .then(({ data }) => {
           data.forEach(({ show }) => {
-            this.result.push(show)
             if (!this.items.includes(show.name)) {
               this.items.push(show.name)
+							this.result.push(show)
             }
           })
           this.loading = false
